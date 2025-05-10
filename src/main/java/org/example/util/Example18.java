@@ -935,9 +935,39 @@ public class Example18 {
         return number % 100 == 0 ? number / 100 : number/100 + 1;
     }
 
+    public static String warnTheSheep(String[] array) {
+        //Your code)))
+        int resultCount = 0;
+        String result = "Pls go away and stop eating my sheep";
+        Deque<String> linkedList = new LinkedList<>(Arrays.asList(array));
+        int size = linkedList.size();
+        for (int i = 0; i < size; i++) {
+            String current = linkedList.pollLast();
+            if (current.equals("wolf")) {
+                resultCount = i;
+            }
+        }
+        if (resultCount != 0) {
+            result = "Oi! Sheep number " + resultCount + "! You are about to be eaten by a wolf!";
+        }
+        return result;
+    }
 
+    public static String warnTheSheep2(String[] array) {
+        if (array == null || array.length == 0) throw new IllegalArgumentException();
 
+        if (array[array.length - 1].equalsIgnoreCase("wolf")) {
+            return "Pls go away and stop eating my sheep";
+        }
 
+        int wolfIndex = IntStream.range(0, array.length)
+                .filter(i -> array[i].equals("wolf"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException());
 
+        int place = array.length - 1 - wolfIndex;
+
+        return String.format("Oi! Sheep number %d! You are about to be eaten by a wolf!", place);
+    }
 
 }

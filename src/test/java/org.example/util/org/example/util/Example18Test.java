@@ -222,4 +222,12 @@ class Example18Test {
         int actual = Example18.century(input);
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    void testWarnTheSheep() {
+        String [] input = {"sheep","sheep", "wolf", "sheep"};
+        String expected = "Oi! Sheep number 1! You are about to be eaten by a wolf!";
+        String actual = Example18.warnTheSheep(input);
+        Assertions.assertEquals(expected, actual);
+    }
 }
