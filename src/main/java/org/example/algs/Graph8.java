@@ -88,7 +88,7 @@ public class Graph8 {
             List<Integer> way = ways.get(i);
             currentLength = 0;
             for (int j = 0; j < way.size() - 1; j++) {
-                int currentWeight = getWeightForTwoVerixes(way.get(j),way.get(j + 1));
+                int currentWeight = getWeightForTwoVertexes(way.get(j),way.get(j + 1));
                 currentLength = currentLength + currentWeight;
                 System.out.println("currentLength = " + currentWeight);
             }
@@ -102,7 +102,7 @@ public class Graph8 {
         System.out.println("minimal length is : " + minLength);
     }
 
-    public int getWeightForTwoVerixes(int first, int second) {
+    public int getWeightForTwoVertexes(int first, int second) {
         int result = 0;
         int index = 0;
         List<Integer> neighbors = graph.get(first);

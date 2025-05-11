@@ -8,10 +8,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class Graph8Test {
 
     @Test
-    void getWeightForTwoVerixes() {
+    void getWeightForTwoVertexes() {
         Graph8 graph8 = new Graph8();
         int expected = 1;
-        int actual = graph8.getWeightForTwoVerixes(1,2);
+        int actual = graph8.getWeightForTwoVertexes(1,2);
         Assertions.assertEquals(expected, actual);
     }
 }
