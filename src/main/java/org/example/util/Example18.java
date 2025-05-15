@@ -3,6 +3,7 @@ package org.example.util;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -969,5 +970,52 @@ public class Example18 {
 
         return String.format("Oi! Sheep number %d! You are about to be eaten by a wolf!", place);
     }
+
+    public static String mix(String s1, String s2) {
+        // your code
+        String result = "";
+        Map<String, Long> map1 = getMapFromString(s1);
+        Map<String, Long> map2 = getMapFromString(s2);
+
+    return "";
+    }
+
+    public static Map<String, Long> getMapFromString(String string) {
+       Map<String, Long> map = Arrays.stream(string.split(""))
+               .map(e -> e)
+               .collect(Collectors.groupingBy(i-> i, Collectors.counting()));
+//       map.entrySet().forEach((entry) -> {
+//           if (entry.getValue() < 2) {
+//               map.remove(entry);
+//           }
+//       });
+        Map<String, Long> sortedMap =
+                map.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .collect(Collectors.toMap(e -> e.getKey(),
+                                e -> e.getValue(),
+                                (a1,a2) -> a1,
+                                LinkedHashMap::new));
+        Map<String, Long> filteredMap = new HashMap<>();
+        sortedMap.entrySet().forEach((entry) -> {
+            if (entry.getValue() > 1) {
+                filteredMap.put(entry.getKey(), entry.getValue());
+            }
+        });
+
+        return filteredMap;
+    }
+
+    public static Integer mapStringToInteger(String string) {
+//        Character c = string.charAt(0);
+//        System.out.println(c);
+//        int i = c;
+//        System.out.println(i);
+//        Character cc = (char) i;
+//        System.out.println(cc);
+//        System.out.println((int)'z');
+        return (int) string.charAt(0);
+    }
+
 
 }

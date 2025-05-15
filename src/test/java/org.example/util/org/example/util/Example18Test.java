@@ -230,4 +230,22 @@ class Example18Test {
         String actual = Example18.warnTheSheep(input);
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    void testMapStringToInteger() {
+        String string = "abc";
+        String string2 = "z";
+        Integer expected = 97;
+        Example18 example18 = new Example18();
+        Integer actual = example18.mapStringToInteger(string);
+        Assertions.assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void testMapFromString() {
+        String input = "abbbbbbbbbccc";
+        Map<String,  Long> map = Example18.getMapFromString(input);
+        System.out.println(map);
+    }
 }
