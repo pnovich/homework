@@ -248,4 +248,15 @@ class Example18Test {
         Map<String,  Long> map = Example18.getMapFromString(input);
         System.out.println(map);
     }
+
+    @Test
+    void mix() {
+        String string1 = " In many languages";
+        String string2 = " there's a pair of functions";
+        Example18 example18 = new Example18();
+        String actual = example18.mix(string1, string2);
+        System.out.println("actual = " + actual);
+        String expected = "1:aaa/1:nnn/1:gg/2:ee/2:ff/2:ii/2:oo/2:rr/2:ss/2:tt";
+        assertEquals(expected, actual);
+    }
 }

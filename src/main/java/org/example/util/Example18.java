@@ -1,5 +1,6 @@
 package org.example.util;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -974,14 +975,177 @@ public class Example18 {
     public static String mix(String s1, String s2) {
         // your code
         String result = "";
+        System.out.println("string1 = " + s1);
+        System.out.println("string2 = " + s2);
+        if (s1.equals(s2)) {
+            return "";
+        }
         Map<String, Long> map1 = getMapFromString(s1);
         Map<String, Long> map2 = getMapFromString(s2);
 
-    return "";
+        System.out.println("map1 = " + map1);
+        System.out.println("map2 = " + map2);
+        Map<String, Map<String, Long>> mapOfMaps = new HashMap<>();
+        mapOfMaps.put("1",map1);
+        mapOfMaps.put("2",map2);
+        Map<String, Map<String, Long>> resultMap =
+                createMixedStringFromMapOfMaps(mapOfMaps, new HashMap<>());
+        System.out.println("map of maps : " + mapOfMaps);
+        System.out.println("resultMpa : " + resultMap);
+        String stringResult = getResultStringFromCombinedMap(resultMap);
+        System.out.println("string result = " + stringResult);
+    return stringResult;
+    }
+
+    public static String getResultStringFromCombinedMap(Map<String, Map<String, Long>> compbinedMap) {
+       String result = "";
+       Map<String, String> resultMapForString = new HashMap<>();
+
+       Comparator<Map.Entry<String,String>> equalsComparator =
+               new Comparator<Map.Entry<String, String>>() {
+                   @Override
+                   public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
+                       return o1.getKey().compareTo(o2.getKey());
+                   }
+               };
+       Comparator<Map.Entry<String, String>> anotherComparator =
+               new Comparator<Map.Entry<String, String>>() {
+                   @Override
+                   public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
+                       return o1.getValue().compareTo(o2.getValue());
+                   }
+               };
+       Comparator<Map.Entry<String, String>> thirdComparator = (o1,o2) -> {
+           int first = o1.getKey().toCharArray()[0];
+           int second = o1.getKey().toCharArray()[0];
+
+           if  (first > second) return -1;
+           if (first < second) return 1;
+           return o1.getKey().compareTo(o2.getKey());
+       };
+       Comparator<Map.Entry<String,String>> comparator4 =
+        Comparator
+                .comparing((Map.Entry<String,String> entry) ->
+                        entry.getKey().length())
+                .thenComparing((Map.Entry<String,String> entry)
+                               -> !entry.getValue().equals("="))
+                .thenComparing((Map.Entry<String,String> entry) ->
+                        entry.getKey().length()).reversed()
+//                .thenComparing((Map.Entry<String,String> entry) ->
+//                        entry.getKey().toCharArray()[0])
+                .thenComparing((Map.Entry<String,String> entry) ->
+                        entry.getValue());
+
+       Comparator<Map.Entry<String,String>> myComparator =
+               Map.Entry.comparingByKey();
+
+       Map<String, String> sortedMap = new TreeMap<String, String>(
+//               myComparator
+//               new Comparator<String>() {
+//                   @Override
+//                   public int compare(String o1, String o2) {
+//                       if (o1.length() > o2.length()) {
+//                           return -2;
+//                       } else if (o1.equals("=")) {
+//                           System.out.println("equals");
+//                           return -1;
+//                       }
+//
+//                       return 0;
+//                   }
+//               }
+       );
+
+       for (Map.Entry<String, Map<String, Long>> entry : compbinedMap.entrySet()) {
+           String repeatedLetterString = "";
+           String letter = entry.getKey();
+           Long numberOfRepeats = entry.getValue().entrySet()
+                   .stream()
+                   .findFirst()
+                   .get()
+                   .getValue();
+           String providerName = entry.getValue().entrySet()
+                   .stream()
+                   .findFirst()
+                   .get()
+                   .getKey();
+           for (int i = 0; i < numberOfRepeats; i++) {
+               repeatedLetterString = repeatedLetterString + letter;
+           }
+//           result = result + providerName + ":" + repeatedLetterString + "/";
+           resultMapForString.put(repeatedLetterString, providerName);
+       }
+        System.out.println("map for string1 : " + resultMapForString);
+        sortedMap.putAll(resultMapForString);
+        System.out.println("sortedMap for string : " + sortedMap);
+        Map<String, String> secondSortedMap = new TreeMap<String, String>(
+//
+//                new Comparator<String>() {
+//                    @Override
+//                    public int compare(String o1, String o2) {
+//                        if (o1.equals("=")) {
+//                            return -1;
+//                        } else {
+//                            return 1;
+////                                    o1.compareTo(o2);
+//                        }
+//                    }
+//                }
+        );
+        List<Map.Entry<String, String>> sortedEntries =
+                sortedMap.entrySet()
+                        .stream()
+//                        .sorted(thirdComparator)
+//                        .sorted(myComparator.reversed())
+//                        .sorted()
+//                        .sorted(anotherComparator)
+                        .sorted(comparator4)
+                        .collect(Collectors.toList());
+        System.out.println("sorted entries list : " + sortedEntries);
+
+//        secondSortedMap.putAll(sortedMap);
+        System.out.println("secondSortedMap for string : " + secondSortedMap);
+
+        for (Map.Entry<String, String> entry : sortedEntries) {
+                       result = result + entry.getValue() + ":" + entry.getKey() + "/";
+        }
+        result = result.substring(0, result.length() - 1);
+        return result;
+    }
+
+    public static Map<String, Map<String, Long>> createMixedStringFromMapOfMaps(Map<String, Map<String,Long>> inputMap, Map<String,Map<String, Long>> resultMap) {
+        Map<String, Map<String, Long>> result = resultMap;
+        for (Map.Entry<String, Map<String, Long>> currentMapFromInput : inputMap.entrySet()) {
+            Map<String,Long> currentMapFromInputValue = currentMapFromInput.getValue();
+            String currentMapFromInputKey = currentMapFromInput.getKey();
+            for (Map.Entry<String, Long> currentRealMapEntry : currentMapFromInputValue.entrySet()) {
+                if (!result.containsKey(currentRealMapEntry.getKey())) {
+                    Map<String, Long> currentPair = new HashMap<>();
+                    currentPair.put(currentMapFromInputKey, currentRealMapEntry.getValue());
+                    result.put(currentRealMapEntry.getKey(), currentPair);
+                } else {
+                    Map<String, Long> comparingMap = result.get(currentRealMapEntry.getKey());
+//                    Long comparingNumber = comparingMap.get(currentMapFromInputKey);
+                    Long comparingNumber = comparingMap.entrySet().stream().findFirst().get().getValue();
+                    Long currentNumber = currentRealMapEntry.getValue();
+                    if (currentNumber > comparingNumber) {
+                        Map<String, Long> newPair = new HashMap<>();
+                        newPair.put(currentMapFromInputKey, currentRealMapEntry.getValue());
+                       result.put(currentRealMapEntry.getKey(), newPair);
+                    } else if (currentNumber.equals(comparingNumber)) {
+                        Map<String, Long> newPair = new HashMap<>();
+                        newPair.put("=", currentRealMapEntry.getValue());
+                        result.put(currentRealMapEntry.getKey(), newPair);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public static Map<String, Long> getMapFromString(String string) {
        Map<String, Long> map = Arrays.stream(string.split(""))
+               .filter(s -> s.matches("[a-z]"))
                .map(e -> e)
                .collect(Collectors.groupingBy(i-> i, Collectors.counting()));
 //       map.entrySet().forEach((entry) -> {
